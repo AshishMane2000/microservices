@@ -3,7 +3,9 @@ package com.prep.user_ms.mapper;
 import com.prep.user_ms.dto.request.CreateUserRequest;
 import com.prep.user_ms.dto.response.UserResponse;
 import com.prep.user_ms.entity.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
     public User toEntity(CreateUserRequest request) {
