@@ -9,6 +9,7 @@ import com.prep.user_ms.repository.UserRepository;
 import com.prep.user_ms.service.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +17,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final BCryptPasswordEncoder passwordEncoder;
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
     public UserServiceImpl(UserRepository repository,
-                           UserMapper mapper) {
+                           UserMapper mapper, BCryptPasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,9 +36,11 @@ public class UserServiceImpl implements UserService {
             log.warn("Registration failed. Email already exists: {}", request.getEmail());
             throw new EmailAlreadyExistsException("Email already exists");
         }
-        mapper.toEntity(request);
+        User user = mapper.toEntity(request);
 
-        User SavedUser = repository.save(mapper.toEntity(request));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        User SavedUser = repository.save(user);
         log.info("User created successfully with id {}", SavedUser.getId());
         return mapper.toResponse(SavedUser);
 

@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -25,15 +22,20 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserController(UserService userService){
-        this.userService=userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello Ashish!";
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<UserResponse>>register(@Valid @RequestBody CreateUserRequest request ){
+    public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody CreateUserRequest request) {
         UserResponse response = userService.register(request);
 
-        ApiResponse<UserResponse> userResponse =  ApiResponse.<UserResponse>builder().Success(true)
+        ApiResponse<UserResponse> userResponse = ApiResponse.<UserResponse>builder().Success(true)
                 .message("User registered successfully")
                 .data(response)
                 .timeStamp(LocalDateTime.now())
