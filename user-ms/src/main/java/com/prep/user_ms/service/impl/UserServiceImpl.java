@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse register(CreateUserRequest request) {
-        log.info("Registering user with email: {}", request.getEmail());
+        log.info("*=====> Registering user with email: {}", request.getEmail());
 
         if (repository.findByEmail(request.getEmail()).isPresent()) {
             log.warn("Registration failed. Email already exists: {}", request.getEmail());
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         User SavedUser = repository.save(user);
-        log.info("User created successfully with id {}", SavedUser.getId());
+        log.info("=====> User created successfully with id {}", SavedUser.getId());
         return mapper.toResponse(SavedUser);
 
     }

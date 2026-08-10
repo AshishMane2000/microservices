@@ -2,7 +2,7 @@ package com.prep.user_ms.controller;
 
 import com.prep.user_ms.exception.EmailAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.prep.user_ms.dto.response.ErrorResponse;
