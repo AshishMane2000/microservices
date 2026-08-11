@@ -22,7 +22,8 @@ public class UserServiceImpl implements UserService {
 
 
     public UserServiceImpl(UserRepository repository,
-                           UserMapper mapper, BCryptPasswordEncoder passwordEncoder) {
+                           UserMapper mapper  , BCryptPasswordEncoder passwordEncoder
+                           ) {
         this.repository = repository;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = mapper.toEntity(request);
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         User SavedUser = repository.save(user);
         log.info("=====> User created successfully with id {}", SavedUser.getId());
