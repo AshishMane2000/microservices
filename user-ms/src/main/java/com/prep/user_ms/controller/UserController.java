@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody CreateUserRequest request) {
         UserResponse response = userService.register(request);
 
-        ApiResponse<UserResponse> userResponse = ApiResponse.<UserResponse>builder().Success(true)
+        ApiResponse<UserResponse> userResponse = ApiResponse.<UserResponse>builder().success(true)
                 .message("User registered successfully")
                 .data(response)
                 .timeStamp(LocalDateTime.now())

@@ -23,7 +23,8 @@ public class SecurityCofig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/v1/users") .permitAll()
+                                .requestMatchers("/api/v1/users",
+                                        "/api/v1/auth/login") .permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 
@@ -34,6 +35,8 @@ public class SecurityCofig {
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
     @Bean
     AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration)
@@ -41,6 +44,4 @@ public class SecurityCofig {
 
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 }
