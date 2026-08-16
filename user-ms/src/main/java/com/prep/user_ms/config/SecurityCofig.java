@@ -1,5 +1,6 @@
 package com.prep.user_ms.config;
 
+import com.prep.user_ms.security.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -12,11 +13,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityCofig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityCofig.class);
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    SecurityCofig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
@@ -24,8 +31,9 @@ public class SecurityCofig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/api/v1/users",
-                                        "/api/v1/auth/login") .permitAll()
+                                        "/api/v1/auth/login").permitAll()
                                 .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());
 
         return httpSecurity.build();

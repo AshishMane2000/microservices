@@ -16,3 +16,7 @@ spring:
         format_sql: true
 server:
   port: 8081
+security:
+  jwt:
+    secretKey: "ashish12345678901234567890123456"
+    expiration: 120000

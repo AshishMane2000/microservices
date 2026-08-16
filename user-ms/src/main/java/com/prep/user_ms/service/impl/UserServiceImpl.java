@@ -25,15 +25,20 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
 
 
     public UserServiceImpl(UserRepository repository,
-                           UserMapper mapper  , BCryptPasswordEncoder passwordEncoder,AuthenticationManager authenticationManager
-                           ) {
+                           UserMapper mapper,
+                           BCryptPasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JWTService jwtService
+    ) {
         this.repository = repository;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = mapper.toEntity(request);
 
-//        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         User SavedUser = repository.save(user);
         log.info("=====> User created successfully with id {}", SavedUser.getId());
@@ -55,13 +60,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginResponse login(LoginRequest request){
-    Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-    return LoginResponse.builder().email(auth.getName()).message("authentication successful").build();
+    public LoginResponse login(LoginRequest request) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        String token = jwtService.generateToken(auth.getName());
+
+        return LoginResponse.builder()
+//            .email(auth.getName())
+//            .message("authentication successful")
+                .accessToken(token)
+                .tokenType("Bearer")
+                .build();
 
     }
-
-
 
 
 }
